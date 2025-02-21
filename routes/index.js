@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express();
+const router = express.Router();
 const productModel = require('../models/product-model');
 const isloggedin = require('../middlewares/isloggedin');
 const userModel = require('../models/user-models');
