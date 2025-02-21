@@ -1,0 +1,66 @@
+<%- include('./partials/header') %>
+
+<div class="w-full min-h-screen px-20 py-20">
+    <% if (user.cart.length === 0) { %>
+        <p class="text-center text-lg">Your cart is empty.</p>
+    <% } else { %>
+        <!-- 🛒 Grid Container -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <% user.cart.forEach(function(item, index){ %>
+                <!-- 🏷️ Individual Cart Item -->
+                <div class="bg-white shadow-md rounded-lg overflow-hidden" id="cart-item-<%= index %>">
+                    <!-- 🖼️ Product Image -->
+                    <div class="w-full flex justify-center items-center h-80 bg-[<%= item.bgcolor %>]">
+                        <% if (item.image) { %>
+                            <img src="data:/image/jpeg;base64,<%= item.image.toString('base64') %>" alt="Product Image" class="h-[18rem]">
+                        <% } else { %>
+                            <!-- Placeholder Image if no image is present -->
+                            <img src="/images/placeholder.jpg" alt="No Image Available" class="h-[18rem]">
+                        <% } %>
+                    </div>
+
+                    <!-- 📌 Product Details -->
+                    <div class="p-5">
+                        <h3 class="text-2xl font-semibold"><%= item.name %></h3>
+
+                        <!-- 📊 Price Breakdown -->
+                        <div class="mt-4 bg-gray-100 p-4 rounded-md">
+                            <div class="flex justify-between">
+                                <span>Total MRP:</span> <span id="mrp-<%= index %>">₹<%= item.price %></span>
+                            </div>
+                            <div class="flex justify-between text-red-600">
+                                <span>Discount:</span> <span>-₹<%= item.discount %></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Platform Fee:</span> <span>₹ 20</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Shipping:</span> <span class="text-green-600">FREE</span>
+                            </div>
+                            <div class="border-t mt-2 pt-2 flex justify-between text-lg font-semibold">
+                                <span>Total:</span> <span id="total-<%= index %>" class="text-green-600">₹<%= item.price + 20 - item.discount %></span>
+                            </div>
+                        </div>
+
+                        <!-- 🔢 Quantity Controller -->
+                        <div class="mt-4 flex justify-between items-center bg-gray-200 p-3 rounded-md">
+                            <div class="flex items-center gap-2">
+                                <form action="/update-quantity/<%= item._id %>/decrease" method="POST">
+                                    <button type="submit" class="w-7 h-7 bg-white flex rounded-full items-center justify-center shadow-md ri-subtract-line"></button>
+                                </form>
+
+                                <span id="quantity-<%= index %>" class="px-3 py-1 rounded-md bg-white shadow text-black"><%= item.quantity || 1 %></span>
+
+                                <form action="/update-quantity/<%= item._id %>/increase" method="POST">
+                                    <button type="submit" class="w-7 h-7 bg-white flex rounded-full items-center justify-center shadow-md ri-add-line"></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</div>
+
+<%- include('./partials/footer') %>
